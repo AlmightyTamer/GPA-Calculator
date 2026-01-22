@@ -1,7 +1,34 @@
-# Simple GPA Calculator (based on your table)
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple GPA Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        select, button {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
 
-# Quality points table
-points = {
+<h2>GPA Calculator</h2>
+
+<label>Number of Classes:</label>
+<input type="number" id="numClasses" min="1">
+<button onclick="createInputs()">Enter</button>
+
+<div id="classes"></div>
+
+<br>
+<button onclick="calculateGPA()">Calculate GPA</button>
+
+<h3 id="result"></h3>
+
+<script>
+const points = {
     "AP": {
         "A+": 5.7, "A": 5.3, "A-": 5.0,
         "B+": 4.7, "B": 4.3, "B-": 4.0,
@@ -23,18 +50,49 @@ points = {
         "D+": 1.7, "D": 1.3, "D-": 1.0,
         "F": 0
     }
+};
+
+function createInputs() {
+    const container = document.getElementById("classes");
+    container.innerHTML = "";
+    const n = document.getElementById("numClasses").value;
+
+    for (let i = 0; i < n; i++) {
+        container.innerHTML += `
+        <p>
+            Class ${i + 1}:
+            <select class="level">
+                <option>AP</option>
+                <option>HONORS</option>
+                <option>A LEVEL</option>
+            </select>
+
+            <select class="grade">
+                <option>A+</option><option>A</option><option>A-</option>
+                <option>B+</option><option>B</option><option>B-</option>
+                <option>C+</option><option>C</option><option>C-</option>
+                <option>D+</option><option>D</option><option>D-</option>
+                <option>F</option>
+            </select>
+        </p>`;
+    }
 }
 
-total_points = 0
-num_classes = int(input("How many classes? "))
+function calculateGPA() {
+    const levels = document.getElementsByClassName("level");
+    const grades = document.getElementsByClassName("grade");
 
-for i in range(num_classes):
-    print(f"\nClass {i + 1}")
-    level = input("Enter level (AP / Honors / A Level): ").upper()
-    grade = input("Enter grade (A+, A, A-, B+, etc): ").upper()
+    let total = 0;
 
-    class_points = points[level][grade]
-    total_points += class_points
+    for (let i = 0; i < levels.length; i++) {
+        total += points[levels[i].value][grades[i].value];
+    }
 
-gpa = total_points / num_classes
-print("\nYour GPA is:", round(gpa, 2))
+    const gpa = total / levels.length;
+    document.getElementById("result").innerText =
+        "Your GPA is: " + gpa.toFixed(2);
+}
+</script>
+
+</body>
+</html>
